@@ -1,4 +1,4 @@
-fetch('http://localhost:3000/characters')
+/*fetch('http://localhost:3000/characters')
     .then((resp) => resp.json())
     .then((characterObjects) => characterObjects.forEach((characters) => renderCharacter(characters)))
 
@@ -46,4 +46,52 @@ function handleSubmit(e) {
     renderCharacter(characterObject)
 
     e.target.reset()
+}*/
+
+fetch("http://localhost:3000/characters")
+    .then((resp) => resp.json())
+    .then((chars) => renderNames(chars))
+
+function renderNames(chars) {
+
+    const characterBar = document.querySelector('#character-bar')
+
+    chars.forEach((char) => {
+        const span = document.createElement('span')
+        span.textContent = char.name
+
+        characterBar.appendChild(span)
+
+        span.addEventListener('click', renderCharInfo)
+
+        function renderCharInfo() {
+            const nameLocation = document.querySelector('#name')
+            const imageLocation = document.querySelector('#image')
+            const voteLocation = document.querySelector('#vote-count')
+
+            nameLocation.textContent = char.name
+            imageLocation.src = char.image
+            voteLocation.textContent = char.votes
+        }
+
+    
+    })
+
+    const form = document.querySelector('#votes-form')
+
+    form.addEventListener('submit', addVotes)
+
+    function addVotes(e) {
+        e.preventDefault()
+
+        let previousVotes = document.querySelector('#vote-count').textContent
+        let currentVotes = e.target.votes.value
+
+        let totalVotes = parseInt(previousVotes) + parseInt(currentVotes)
+
+        const voteLocation = document.querySelector('#vote-count')
+
+        voteLocation.textContent = totalVotes
+    }
+
 }
